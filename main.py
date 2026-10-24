@@ -1,5 +1,5 @@
 from record_argument import record_argument
-from gemini_ai import transcribe_both, determine_topic, judge_debate
+from gemini_ai import transcribe_both, judge_debate
 import json
 
 def main():
@@ -13,8 +13,7 @@ def main():
     print(f"Transcription for Person A: {transcription_a}")
     print(f"Transcription for Person B: {transcription_b}")
 
-    topic = determine_topic(transcription_a, transcription_b)
-    judgment = judge_debate(topic, transcription_a, transcription_b)
+    judgment = judge_debate(transcription_a, transcription_b)
     print(f"Debate judgment: {judgment}")
 
     # The model returns JSON text; parse it so the file contains an object,
