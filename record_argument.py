@@ -22,5 +22,3 @@ def record_argument(person, duration=30, sample_rate=16000):
 
     print(f"Saved {filename}")
 
-record_argument("A", 5)
-record_argument("B", 5)

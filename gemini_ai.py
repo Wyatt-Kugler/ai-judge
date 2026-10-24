@@ -53,13 +53,8 @@ there is not enough meaningful disagreement or information to establish a debate
 topic."""
 
     interaction = client.interactions.create(
-        model="gemini-3.5",
-        input=[
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
+        model="gemini-3.5-flash",
+        input=prompt
     )
 
     return interaction.output_text
@@ -123,13 +118,8 @@ Use exactly this structure:
 }}"""
 
     interaction = client.interactions.create(
-        model="gemini-3.5",
-        input=[
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
+        model="gemini-3.5-flash",
+        input=prompt
     )
 
     return interaction.output_text
