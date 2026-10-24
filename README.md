@@ -1,74 +1,64 @@
-# ai-judge
+# AI Judge
 
-import time
+AI Judge compares two recorded arguments, asks Gemini to transcribe and score them, saves the result as JSON, and reads the written verdict aloud.
 
-# Simulate a 16x2 LCD display buffer
-# Each row holds 16 characters
-class SimulatedLCD:
-    def __init__(self, cols=16, rows=2):
-        self.cols = cols
-        self.rows = rows
-        # Initialize display with spaces
-        self.buffer = [" " * cols for _ in range(rows)]
-        self.display_offset = 0
+## Requirements
 
-    def begin(self, cols, rows):
-        self.cols = cols
-        self.rows = rows
-        self.buffer = [" " * cols for _ in range(rows)]
+- Python 3.10 or newer
+- A Google Gemini API key
+- Two argument recordings saved as WAV files
+- A working audio output device; microphone access is needed if you use the recording helper
 
-    def print(self, text):
-        # Place text on the first row, padded to fit the display width if needed
-        row0 = text.ljust(self.cols)
-        self.buffer[0] = row0[:self.cols]
+## Setup
 
-    def scroll_display_left(self):
-        # Shift the view window to the left (simulated by rotating the string buffer)
-        self.buffer[0] = self.buffer[0][1:] + self.buffer[0][0]
-        self.buffer[1] = self.buffer[1][1:] + self.buffer[1][0]
-        self._render()
+Create and activate a virtual environment, then install the dependencies:
 
-    def scroll_display_right(self):
-        # Shift the view window to the right
-        self.buffer[0] = self.buffer[0][-1] + self.buffer[0][:-1]
-        self.buffer[1] = self.buffer[1][-1] + self.buffer[1][:-1]
-        self._render()
+```powershell
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
 
-    def _render(self):
-        # Print the current state of the LCD to the terminal
-        print(f"\r[{self.buffer[0]}]", end="", flush=True)
+Create a `.env` file in the project root and add your API key:
 
+```text
+GEMINI_API_KEY=your_api_key_here
+```
 
-# --- Main Program Loop ---
+The Google Gen AI client reads `GEMINI_API_KEY` from the environment. Keep the key private; `.env` is excluded from Git.
 
-lcd = SimulatedLCD()
+## Prepare the audio
 
-def setup():
-    lcd.begin(16, 2)
-    lcd.print("Hello World!")
-    print("\nInitial Display:")
-    print(f"[{lcd.buffer[0]}]")
-    time.sleep(1)
+Place the recordings at these paths:
 
-def loop():
-    print("\n--- Scrolling Left ---")
-    for position_counter in range(13):
-        lcd.scroll_display_left()
-        time.sleep(1)
+```text
+audio_files/person_a.wav
+audio_files/person_b.wav
+```
 
-    print("\n--- Scrolling Right ---")
-    for position_counter in range(29):
-        lcd.scroll_display_right()
-        time.sleep(1)
+The current app expects those files to exist before launch. `record_argument.py` contains a microphone recording helper, but its calls are commented out in `__main__.py`; recording does not start automatically.
 
-    print("\n--- Scrolling Back to Center ---")
-    for position_counter in range(16):
-        lcd.scroll_display_left()
-        time.sleep(1)
+## Run
 
-    time.sleep(1)
+From the project root, run either entry point:
 
-if __name__ == "__main__":
-    setup()
-    while True:
-        loop()
+```powershell
+python __main__.py
+```
+
+or, for IDE configurations targeting `main.py`:
+
+```powershell
+python main.py
+```
+
+The app transcribes both recordings, evaluates the arguments, writes the structured judgment to `Json/output.json`, generates a spoken version of the reasoning, and plays it from `audio_files/output.mp3`. Gemini calls require an internet connection.
+
+## Project files
+
+- `__main__.py` — application workflow and output playback
+- `gemini_ai.py` — Gemini transcription and debate evaluation
+- `record_argument.py` — optional microphone recording helper
+- `text_to_speech.py` — spoken verdict generation
+- `Json/output.json` — generated judgment
+- `audio_files/` — input recordings and generated speech

@@ -1,4 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
+from time import perf_counter
 
 from google import genai
 from dotenv import load_dotenv
@@ -8,8 +9,11 @@ load_dotenv()  # Load environment variables from .env file
 
 client = genai.Client()
 def transcribe_audio(file_path):
+    started = perf_counter()
+    print(f"Uploading {file_path} for transcription...", flush=True)
     audio_file = client.files.upload(file=file_path)
 
+    print(f"Transcribing {file_path}...", flush=True)
     interaction = client.interactions.create(
         model="gemini-3.5-transcribe",
         input=[
@@ -21,6 +25,7 @@ def transcribe_audio(file_path):
         ],
     )
     
+    print(f"Finished {file_path} in {perf_counter() - started:.1f}s.", flush=True)
     return interaction.output_text
 def transcribe_both(audio_a, audio_b):
     with ThreadPoolExecutor(max_workers=2) as executor:
@@ -73,6 +78,7 @@ def transcribe_both(audio_a, audio_b):
 
 
 def judge_debate(transcription_a, transcription_b):
+    started = perf_counter()
     prompt = f"""You are an impartial AI judge evaluating a debate between two participants.
 
 Evaluate both participants' arguments on the given debate topic and determine a
@@ -129,16 +135,18 @@ Use exactly this structure:
       "total": 7.35
     }}
   }},
-  "reasoning": "A won because... (make it witty while still being fair and impartial). Start by explicitly mentioning who the winner is, and keep it to 30-40 words",
+  "reasoning": "A wins the debate. A won because... (make it witty while still being fair and impartial). Start by explicitly mentioning who the winner is, and keep it to 30-40 words",
   "strongest_point_A": "...",
   "strongest_point_B": "...",
   "verdict": "A wins this debate!",
   "judge_comment": "A short, fair, witty, and entertaining judicial remark, while still making it clear why they won."
 }}"""
 
+    print("Sending debate for judgment...", flush=True)
     interaction = client.interactions.create(
         model="gemini-3.5-flash",
         input=prompt
     )
 
+    print(f"Judgment received in {perf_counter() - started:.1f}s.", flush=True)
     return interaction.output_text
