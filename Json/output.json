@@ -1,0 +1,24 @@
+{
+    "winner": "B",
+    "scores": {
+        "A": {
+            "reasoning": 5,
+            "evidence": 2,
+            "relevance_rebuttal": 7,
+            "clarity": 6,
+            "total": 5.45
+        },
+        "B": {
+            "reasoning": 7,
+            "evidence": 2,
+            "relevance_rebuttal": 8,
+            "clarity": 7,
+            "total": 6.85
+        }
+    },
+    "reasoning": "Person B presented a more structured and practical argument. B framed day studying as beneficial for future career preparation by aligning study habits with standard working hours, while emphasizing the importance of leaving nights free for decompression and personal life. Person A raised a fair point about nighttime quietness, but struggled with logical coherence regarding sleep—claiming night studying reduces morning stress, when late-night cramming typically increases sleep deprivation and morning rush.",
+    "strongest_point_A": "Studying at night offers an environment with fewer immediate distractions.",
+    "strongest_point_B": "Daytime studying aligns with future workplace schedules and leaves the evening clear to unwind and maintain work-life balance.",
+    "verdict": "Person B wins this debate!",
+    "judge_comment": "Person B takes the win by treating daytime studying as a rehearsal for real-world career hours, leaving evenings open for actual relaxation. Person A claimed late-night studying leads to peaceful sleep, but anyone who has ever pulled an all-nighter knows morning stress usually wins that round!"
+}

@@ -1,5 +1,8 @@
+from concurrent.futures import ThreadPoolExecutor
+
 from google import genai
 from dotenv import load_dotenv
+
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -17,8 +20,17 @@ def transcribe_audio(file_path):
             }
         ],
     )
-
+    
     return interaction.output_text
+def transcribe_both(audio_a, audio_b):
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        future_a = executor.submit(transcribe_audio, audio_a)
+        future_b = executor.submit(transcribe_audio, audio_b)
+
+        transcript_a = future_a.result()
+        transcript_b = future_b.result()
+
+    return transcript_a, transcript_b
 
 def determine_topic(transcription_a, transcription_b):
     prompt = f"""You are an impartial debate topic generator.
@@ -77,13 +89,14 @@ Person B's argument:
 {transcription_b}
 
 Score each participant from 0 to 10 in each category:
-- Reasoning (35%): logical soundness, coherence, and support.
-- Evidence and examples (25%): relevant evidence, facts, or examples.
-- Relevance and rebuttal (25%): addressing the topic and opposing position.
+- Reasoning (45%): logical soundness, coherence, and support.
+- Evidence and examples (5%): relevant evidence, facts, or examples.
+- Relevance (25%): addressing the topic and opposing position.
 - Clarity (15%): clear and effective communication.
 
 Rules:
 - Judge both arguments fairly using the same standards.
+- The debate is a casual argument, not a formal debate. Focus on the quality of reasoning.
 - Do not favor a participant based on speaking style, accent, confidence, or length.
 - Do not invent evidence or claims.
 - If a transcript is incomplete or unintelligible, acknowledge that limitation.
@@ -110,11 +123,11 @@ Use exactly this structure:
       "total": 7.35
     }}
   }},
-  "reasoning": "A won because...",
+  "reasoning": "A won because... (make it witty while still being fair and impartial).",
   "strongest_point_A": "...",
   "strongest_point_B": "...",
   "verdict": "A wins this debate!",
-  "judge_comment": "A short, fair, entertaining judicial remark."
+  "judge_comment": "A short, fair, witty, and entertaining judicial remark, while still making it clear why they won."
 }}"""
 
     interaction = client.interactions.create(
