@@ -138,7 +138,7 @@ Use exactly this structure:
   "reasoning": "A wins the debate. A won because... (make it witty while still being fair and impartial). Start by explicitly mentioning who the winner is, and keep it to 30-40 words",
   "strongest_point_A": "...",
   "strongest_point_B": "...",
-  "verdict": "A wins this debate!",
+  "verdict": "A,B or TIE.",
   "judge_comment": "A short, fair, witty, and entertaining judicial remark, while still making it clear why they won."
 }}"""
 
