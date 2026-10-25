@@ -3,6 +3,8 @@ print("Loaded __main__.py", flush=True)
 import asyncio
 import json
 
+
+
 def main():
     print("Starting AI Judge...", flush=True)
 
@@ -10,11 +12,12 @@ def main():
     # import cannot make the Run button look like it did nothing.
     from gemini_ai import transcribe_both, judge_debate
     from text_to_speech import text_to_speech
+    from record_argument import record_argument
     import playsound
 
     # Record audio for Person A and Person B
-    # record_argument("A", 30)
-    # record_argument("B", 30)
+    record_argument("A")
+    record_argument("B")
 
     # Transcribe the recorded audio files
     print("Transcribing audio files... this can take a while.", flush=True)
